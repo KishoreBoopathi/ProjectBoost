@@ -4,14 +4,18 @@ using UnityEngine;
 
 public class Movement : MonoBehaviour
 {
-    Rigidbody rigidBody;
+    Rigidbody rocketRigidbody;
+    AudioSource rocketAudioSource;
+
     [SerializeField] float thrustSpeed = 1000.0f;
     [SerializeField] float rotateAngle = 100.0f;
 
     // Start is called before the first frame update
     void Start()
     {
-        rigidBody = GetComponent<Rigidbody>();
+        rocketRigidbody = GetComponent<Rigidbody>();
+        rocketAudioSource = GetComponent<AudioSource>();
+
     }
 
     // Update is called once per frame
@@ -25,7 +29,13 @@ public class Movement : MonoBehaviour
     {
         if(Input.GetKey(KeyCode.Space))
         {
-            rigidBody.AddRelativeForce(Vector3.up * thrustSpeed * Time.deltaTime);
+            rocketRigidbody.AddRelativeForce(Vector3.up * thrustSpeed * Time.deltaTime);
+            if(!rocketAudioSource.isPlaying)
+                rocketAudioSource.Play();
+        }
+        else
+        {
+            rocketAudioSource.Stop();
         }
     }
 
@@ -43,8 +53,8 @@ public class Movement : MonoBehaviour
 
     void ApplyRotation(float rotationThisFrame)
     {
-        rigidBody.freezeRotation = true;
+        rocketRigidbody.freezeRotation = true;
         transform.Rotate(Vector3.forward * rotationThisFrame * Time.deltaTime);
-        rigidBody.freezeRotation = false;
+        rocketRigidbody.freezeRotation = false;
     }
 }
