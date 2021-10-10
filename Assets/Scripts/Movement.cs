@@ -17,14 +17,12 @@ public class Movement : MonoBehaviour
         rocketAudioSource = GetComponent<AudioSource>();
 
     }
-
     // Update is called once per frame
     void Update()
     {
         ProcessThrust();
         ProcessRotation();
     }
-
     void ProcessThrust()
     {
         if(Input.GetKey(KeyCode.Space))
@@ -38,7 +36,6 @@ public class Movement : MonoBehaviour
             rocketAudioSource.Stop();
         }
     }
-
     void ProcessRotation()
     {
         if(Input.GetKey(KeyCode.A))
@@ -50,7 +47,6 @@ public class Movement : MonoBehaviour
             ApplyRotation(-rotateAngle);
         }
     }
-
     void ApplyRotation(float rotationThisFrame)
     {
         rocketRigidbody.freezeRotation = true;
