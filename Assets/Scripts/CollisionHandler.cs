@@ -6,16 +6,31 @@ using UnityEngine.SceneManagement;
 public class CollisionHandler : MonoBehaviour
 {
     Movement movementScript;
+    Debugger debugger;
     AudioSource rocketAudioSource;
+    GameManager gameManager;
     [SerializeField] float delayTime = 1.0f;
+    [SerializeField] AudioClip crashSound;
+    [SerializeField] AudioClip successSound;
+    [SerializeField] ParticleSystem explosionLightParticle;
+    [SerializeField] ParticleSystem explosionSparkParticle;
+    [SerializeField] ParticleSystem explosionSmokeParticle;
+    [SerializeField] ParticleSystem successParticle;
 
+    bool isTransitioning = false;
     private void Start() 
     {
+        gameManager = FindObjectOfType<GameManager>();
+        debugger = gameManager.GetComponentInChildren<Debugger>();
         movementScript = GetComponent<Movement>();
         rocketAudioSource = GetComponent<AudioSource>();
     }
     void OnCollisionEnter(Collision other) 
     {
+        if(isTransitioning || debugger.GetCollisionStatus())
+        {
+            return;
+        }
         switch(other.gameObject.tag)
         {
             case "Friendly":
@@ -24,7 +39,6 @@ public class CollisionHandler : MonoBehaviour
             case "LandingPad":
                 Debug.Log("Nailed the landing.");
                 ImplementSuccessSequence();
-                
                 break;
             default:
                 ImplementCrashSequence();
@@ -36,6 +50,9 @@ public class CollisionHandler : MonoBehaviour
         movementScript.enabled = false;
         if(rocketAudioSource.isPlaying)
             rocketAudioSource.Stop();
+        rocketAudioSource.PlayOneShot(crashSound);
+        PlayExplosionParticleEffect();
+        isTransitioning = true;
         Invoke("ReloadLevel", delayTime);
     }
     void ImplementSuccessSequence()
@@ -43,6 +60,9 @@ public class CollisionHandler : MonoBehaviour
         movementScript.enabled = false;
         if(rocketAudioSource.isPlaying)
             rocketAudioSource.Stop();
+        rocketAudioSource.PlayOneShot(successSound);
+        successParticle.Play();
+        isTransitioning = true;
         Invoke("LoadNextLevel", delayTime);
     }
     void ReloadLevel()
@@ -60,5 +80,12 @@ public class CollisionHandler : MonoBehaviour
             UnityEditor.EditorApplication.isPlaying = false;
         }
         SceneManager.LoadScene(nextSceneIndex);
+    }
+
+    void PlayExplosionParticleEffect()
+    {
+        explosionLightParticle.Play();
+        explosionSmokeParticle.Play();
+        explosionSparkParticle.Play();
     }
 }
