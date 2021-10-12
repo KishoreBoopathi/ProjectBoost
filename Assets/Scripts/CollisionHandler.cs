@@ -34,10 +34,8 @@ public class CollisionHandler : MonoBehaviour
         switch(other.gameObject.tag)
         {
             case "Friendly":
-                Debug.Log("No worries. Keep going");
                 break;
             case "LandingPad":
-                Debug.Log("Nailed the landing.");
                 ImplementSuccessSequence();
                 break;
             default:
@@ -76,7 +74,7 @@ public class CollisionHandler : MonoBehaviour
         int nextSceneIndex = currentSceneIndex + 1;
         if(nextSceneIndex == SceneManager.sceneCountInBuildSettings)
         {
-            //Application.Quit();
+            Application.Quit();
             UnityEditor.EditorApplication.isPlaying = false;
         }
         SceneManager.LoadScene(nextSceneIndex);

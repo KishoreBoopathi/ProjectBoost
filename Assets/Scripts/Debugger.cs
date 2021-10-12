@@ -22,8 +22,7 @@ public class Debugger : MonoBehaviour
         int nextSceneIndex = currentSceneIndex + 1;
         if(nextSceneIndex == SceneManager.sceneCountInBuildSettings)
         {
-            //Application.Quit();
-            Debug.Log("This is the last level !!");
+            Application.Quit();
         }
         SceneManager.LoadScene(nextSceneIndex);
     }
