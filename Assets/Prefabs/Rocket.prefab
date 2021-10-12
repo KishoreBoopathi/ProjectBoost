@@ -311,12 +311,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   delayTime: 3
+  hitSound: {fileID: 8300000, guid: 5656eff8d5ba41046b823d33e6f3a18d, type: 3}
   crashSound: {fileID: 8300000, guid: da2245079f47b294796a98e301ba5db7, type: 3}
   successSound: {fileID: 8300000, guid: 9ea35deb0dbc891498aec0bce998093f, type: 3}
   explosionLightParticle: {fileID: 689389951709345024}
   explosionSparkParticle: {fileID: 689226589650805382}
   explosionSmokeParticle: {fileID: 689285225535882606}
   successParticle: {fileID: 2014341065825239311}
+  healthBar: {fileID: 0}
 --- !u!1001 &815510246737114872
 PrefabInstance:
   m_ObjectHideFlags: 0

@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class CollisionHandler : MonoBehaviour
 {
@@ -10,13 +11,17 @@ public class CollisionHandler : MonoBehaviour
     AudioSource rocketAudioSource;
     GameManager gameManager;
     [SerializeField] float delayTime = 1.0f;
+    [SerializeField] AudioClip hitSound;
     [SerializeField] AudioClip crashSound;
     [SerializeField] AudioClip successSound;
     [SerializeField] ParticleSystem explosionLightParticle;
     [SerializeField] ParticleSystem explosionSparkParticle;
     [SerializeField] ParticleSystem explosionSmokeParticle;
     [SerializeField] ParticleSystem successParticle;
+    [SerializeField] Slider healthBar;
 
+    float maxHealth = 10.0f;
+    float health = 10.0f;
     bool isTransitioning = false;
     private void Start() 
     {
@@ -39,11 +44,21 @@ public class CollisionHandler : MonoBehaviour
                 ImplementSuccessSequence();
                 break;
             default:
-                ImplementCrashSequence();
+                health -= other.relativeVelocity.magnitude * 0.2f;
+                Debug.Log(health);
+                healthBar.value = health;
+                if(health <= Mathf.Epsilon)
+                    ImplementCrashSequence(other);
+                else
+                {
+                    if(rocketAudioSource.isPlaying)
+                        rocketAudioSource.Stop();
+                    rocketAudioSource.PlayOneShot(hitSound);
+                }   
                 break;
         }    
     }
-    void ImplementCrashSequence()
+    void ImplementCrashSequence(Collision other)
     {
         movementScript.enabled = false;
         if(rocketAudioSource.isPlaying)
@@ -75,7 +90,7 @@ public class CollisionHandler : MonoBehaviour
         if(nextSceneIndex == SceneManager.sceneCountInBuildSettings)
         {
             Application.Quit();
-            UnityEditor.EditorApplication.isPlaying = false;
+            //UnityEditor.EditorApplication.isPlaying = false;
         }
         SceneManager.LoadScene(nextSceneIndex);
     }
